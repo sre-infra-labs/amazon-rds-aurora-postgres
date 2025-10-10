@@ -59,7 +59,7 @@ Parameters:
   DBEngineVersion:
     Description: Select Database Engine Version
     Type: String
-    Default: 15.2
+    Default: 17.4
     AllowedValues:
       - 11.9
       - 11.21
@@ -93,6 +93,14 @@ Parameters:
       - 15.4
       - 15.5
       - 16.1
+      - 16.2
+      - 16.3
+      - 16.4
+      - 16.6
+      - 16.8
+      - 16.9
+      - 17.4
+      - 17.5
 
 
 # Used as globals
