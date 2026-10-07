@@ -1,0 +1,67 @@
+---
+- name: Stop all running AWS resources (EC2, RDS, Aurora)
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    region: ap-south-1
+
+  tasks:
+
+    - name: Get all running EC2 instances
+      amazon.aws.ec2_instance_info:
+        region: "{{ region }}"
+        filters:
+          instance-state-name: running
+      register: ec2_info
+
+    - name: Stop all running EC2 instances
+      amazon.aws.ec2_instance:
+        region: "{{ region }}"
+        instance_ids: "{{ ec2_info.instances | map(attribute='instance_id') | list }}"
+        state: stopped
+      when: ec2_info.instances | length > 0
+      register: stopped_ec2
+      ignore_errors: yes
+
+    - name: Get all RDS instances
+      amazon.aws.rds_instance_info:
+        region: "{{ region }}"
+      register: rds_info
+
+    - name: Stop RDS instances (non-cluster)
+      amazon.aws.rds_instance:
+        region: "{{ region }}"
+        db_instance_identifier: "{{ item.db_instance_identifier }}"
+        state: stopped
+      loop: "{{ rds_info.instances | selectattr('db_instance_status', 'equalto', 'available') | list }}"
+      when: item.engine not in ['aurora', 'aurora-mysql', 'aurora-postgresql']
+      ignore_errors: yes
+
+    - name: Get all Aurora clusters
+      amazon.aws.rds_cluster_info:
+        region: "{{ region }}"
+      register: aurora_clusters
+
+    - name: Stop Aurora clusters
+      amazon.aws.rds_cluster:
+        region: "{{ region }}"
+        db_cluster_identifier: "{{ item.db_cluster_identifier }}"
+        state: stopped
+      loop: "{{ aurora_clusters.clusters | selectattr('status', 'equalto', 'available') | list }}"
+      ignore_errors: yes
+
+    - name: Show summary
+      debug:
+        msg:
+          - "Stopped EC2 instances: {{ stopped_ec2.instance_ids | default([]) }}"
+          - "Stopped RDS instances: {{ rds_info.instances | length }}"
+          - "Stopped Aurora clusters: {{ aurora_clusters.clusters | length }}"
+
+# ansible-playbook ansible-playbooks/stop_all_aws_resources.yml
+# vim ~/.aws/credentials
+# [default]
+# aws_access_key_id = AAAAAAAAAAAAAAAAAAAAAAAAA
+# aws_secret_access_key = askfdjasdkfjaljksdflkajsdflkjasdf
+# export AWS_DEFAULT_REGION=ap-south-1
+

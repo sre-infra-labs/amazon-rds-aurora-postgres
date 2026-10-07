@@ -187,6 +187,9 @@ Outputs:
     Description: Subnet Group created for the DB cluster
     Value: !Ref ClusterDBSubnetGroup
 
-# Get available engine versions
+# Get available engine versions for aurora-postgresql
+  # https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.Aurora_Fea_Regions_DB-eng.Feature.DBActivityStreams.html
 # aws rds describe-db-engine-versions --engine aurora-postgresql --region ap-south-1 --query 'DBEngineVersions[].EngineVersion' --output text
 
+# Get available engine versions for rds postgresql
+# aws rds describe-db-engine-versions --engine postgres --region ap-south-1 --query 'DBEngineVersions[].EngineVersion' --output text

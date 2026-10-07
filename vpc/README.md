@@ -52,15 +52,15 @@ yum install git -y
 3. Clone the repository
 su - ec2-user
 
-git clone https://github.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1.git
+git clone https://github.com/sre-infra-labs/amazon-rds-aurora-postgres.git
 
 4. Install the tools
-cp -r Amazon-RDS-Aurora-Postgres-v1/bin .
+cp -r amazon-rds-aurora-postgres/bin .
 mkdir cloudformation
-cp -r Amazon-RDS-Aurora-Postgres-v1/vpc/*.yml ./cloudformation
-cp -r Amazon-RDS-Aurora-Postgres-v1/replicas/*.yml ./cloudformation
-cp -r Amazon-RDS-Aurora-Postgres-v1/cluster-basic/*.yml ./cloudformation
-cp -rf Amazon-RDS-Aurora-Postgres-v1/pgbench/ pgbench
+cp -r amazon-rds-aurora-postgres/vpc/*.yml ./cloudformation
+cp -r amazon-rds-aurora-postgres/replicas/*.yml ./cloudformation
+cp -r amazon-rds-aurora-postgres/cluster-basic/*.yml ./cloudformation
+cp -rf amazon-rds-aurora-postgres/pgbench/ pgbench
 
 chmod -R u+x bin
 sudo ./bin/install/psql-pgbench-jq.sh
@@ -133,7 +133,7 @@ Copy and paste the commands in shell prompt on your bastion host
 
 2. Download the setup script
 ----------------------------
-curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion-host.sh 
+curl https://raw.githubusercontent.com/acloudfan/amazon-rds-aurora-postgres/master/bin/install/setup-bastion.sh --output setup-bastion-host.sh 
 
 3 Change mod of the file
 ------------------------
